@@ -1,0 +1,8 @@
+# LaTeX Files
+*.synctex.gz
+*.log
+*.pdf
+*.out
+*.bbl
+*.blg
+*.aux
