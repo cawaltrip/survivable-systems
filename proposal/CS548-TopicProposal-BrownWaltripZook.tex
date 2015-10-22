@@ -5,22 +5,22 @@
 \usepackage[nameinlink]{cleveref}
 
 % PDF Metadata, Link Coloring
-\hypersetup{
-	pdftitle={CS-548: Survivable Systems\\Semester Project Proposal},
-	pdfauthor={Matt Brown; Chris Waltrip; Jared Zook},
-	pdfsubject={University of Idaho; CS-520: Graduate Paper},
-	pdfcreator={Chris Waltrip},
-	pdfproducer={Chris Waltrip},
-	linktoc=all, 			% Link the section number, text and page number in Contents
-	colorlinks=false,        % Removes color frame and colors text instead
-	linkcolor=ForestGreen,  % Default is red, may want to use black
-	citecolor=Bittersweet,  % Default is green
-	filecolor=Cyan,         % Default is cyan
-	urlcolor=Magenta,       % Default is magenta
-}
+%\hypersetup{
+%	pdftitle={CS548: Survivable Systems\\Semester Project Proposal Draft 1},
+%	pdfauthor={Matt Brown; Chris Waltrip; Jared Zook},
+%	pdfsubject={University of Idaho; CS-520: Graduate Paper},
+%	pdfcreator={Chris Waltrip},
+%	pdfproducer={Chris Waltrip},
+%	linktoc=all, 			% Link the section number, text and page number in Contents
+%	colorlinks=false,        % Removes color frame and colors text instead
+%	linkcolor=ForestGreen,  % Default is red, may want to use black
+%	citecolor=Bittersweet,  % Default is green
+%	filecolor=Cyan,         % Default is cyan
+%	urlcolor=Magenta,       % Default is magenta
+%}
 
 % Title Information
-\title{CS-548: Survivable Systems\\Semester Project Proposal}
+\title{CS-548: Survivable Systems\\Semester Project Proposal Draft 1}
 \author{
 	\IEEEauthorblockN{Matt Brown}
 	\IEEEauthorblockA{Department of Computer Science\\University of Idaho\\Moscow, Idaho 83843\\Email: \href{mailto:matt2714@vandals.uidaho.edu}{\nolinkurl{matt2714@vandals.uidaho.edu}}}
@@ -35,23 +35,28 @@
 \begin{document}
 \maketitle
 
-%\begin{abstract}
-%\end{abstract}
+\begin{abstract}
+	This paper is a survey of recent research that addresses the problem of sensor failure in autonomous vehicles. Modern mathematical and fault models are presented, and their strengths and weaknesses are assessed. In particular, we consider the different faults that should be assumed, as well as any real-time constraints that are imposed in the environment. This initial draft of our semester project includes highlights from information we have found so far and provides a roadmap for what direction we intend to go with our research.
+
+
+include summary of direction here
+\end{abstract}
 
 \section{Introduction}
-For this project, the three of us have chosen to work on the first topic, addressing faults within assisted or self-driving vehicles.  Though two of us have done previous research on reliability issues of Dedicated Short-Range Communication (DSRC) in a previous class that could prove useful for the other research topic, the amount of work that can be saved by all three of us with respect to the first topic was too much to pass up.
 
-\section{Our Understanding of the Problem}
-%\begin{Matt was here}
-Our understanding of the problem is that we are tasked with identifying state-of-the-art research that discusses methods for evaluating value faults in the sensors of unmanned vehicles. We are not looking to devise new methods and algorithms that deal with value faults, rather research already proposed methods.  We hope to focus on recent research specifically to help speed the discovery of further research by presenting it in a concise method.
-%\end{Matt was here}
+	write after individual sections completed [jZook]
 
+\section{Research Highlights}
 
-\section{Our Plan to Address Group Work}
-For this project, we plan to meet at least weekly to share new research and ideas, and to divvy up work accordingly. The three of us have shared office space and a past working relationship, so we are likely to keep each other accountable and to share our workload equitably. However, group work can be tricky, so we will remain vigilant of that fact throughout our work. Since three of us will be working on this project, you can expect a longer and more in-depth paper than you would otherwise.
+\subsection{Matt}
+Unmanned vehicles have a much higher sensor count then manned vehicles. These sensors include proximity sensors, RADAR, LIDAR, and GPS. These sensors are deployed in networks that have to agree on input values so they can be process accurately. In order for these sensors to agree they need to be implemented redundantly. An agree method adapted from Yansong Ren and associates can be applied to this situation. In the algorithm proposed by Yansong Ren and associates they describe a set of redundant nodes that communicate through locally before broadcasting the results. If we adapt this algorithm to a real world sensor net the, a physically local group of sensors can be treated as a redundant group. This redundant group can agree on their readings via a majority algorithm or median agreement algorithm, to remove the readings of nodes in the group that read nothing. Once the sensor nodes have an agreed value they can pass the information to the main computer or processing module via multicast so all redundant nodes and the main processing module receive the same value. Through this method the transmitting node is held accountable to the value agreed.
 
-%\bibliographystyle{IEEEtranS}
-%\bibliography{IEEEabrv,./IEEE-BSTcontrol,./CS520-Bibliography}
+\subsection{Chris}
+
+\subsection{Jared}
+
+\bibliographystyle{IEEEtranS}
+\bibliography{../CS548-Bibliography}
 
 \end{document}
 
