@@ -1,0 +1,159 @@
+\documentclass[twoside, conference]{IEEEtran} 
+
+% % % % % % % % % % % % % % %
+% Packages Below            %
+% % % % % % % % % % % % % % %
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{hyperref}
+\usepackage[nameinlink]{cleveref}
+\usepackage{comment}
+
+
+% % % % % % % % % % % % % % %
+% Metadata                  %
+% % % % % % % % % % % % % % %
+\hypersetup{
+	pdftitle={Emergent Issues of Data Fusion and Consensus in Sensor Networks},
+	pdfauthor={Matt Brown; Chris Waltrip; Jared Zook},
+	pdfsubject={University of Idaho; CS-548: Graduate Paper},
+	pdfcreator={Chris Waltrip},
+	pdfproducer={Chris Waltrip},
+	linktoc=all, 			% Link the section number, text and page number in Contents
+	colorlinks=false,       % Removes color frame and colors text instead
+	linkcolor=ForestGreen,  % Default is red, may want to use black
+	citecolor=Bittersweet,  % Default is green
+	filecolor=Cyan,         % Default is cyan
+	urlcolor=Magenta,       % Default is magenta
+}
+
+% % % % % % % % % % % % % % %
+% New square root style     %
+% % % % % % % % % % % % % % %
+\let\oldsqrt\sqrt
+% \sqrt defined in terms of the original sqrt command
+\def\sqrt{\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
+	\advance\dimen0-0.2\ht0
+	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+	{\box0\lower0.4pt\box2}}
+
+
+% % % % % % % % % % % % % % %
+% Title/Author Information  %
+% % % % % % % % % % % % % % %
+\title{Emergent Issues of Data Fusion and Consensus in Sensor Networks}
+\author{
+	\IEEEauthorblockN{Matt Brown}
+	\IEEEauthorblockA{Department of Computer Science\\University of Idaho\\Moscow, Idaho 83843\\Email: \href{mailto:matt2714@vandals.uidaho.edu}{\nolinkurl{matt2714@vandals.uidaho.edu}}}
+	\and
+	\IEEEauthorblockN{Chris Waltrip}
+	\IEEEauthorblockA{Department of Computer Science\\University of Idaho\\Moscow, Idaho 83843\\Email: \href{mailto:walt2178@vandals.uidaho.edu}{\nolinkurl{walt2178@vandals.uidaho.edu}}}
+	\and
+	\IEEEauthorblockN{Jared Zook}
+	\IEEEauthorblockA{Department of Computer Science\\University of Idaho\\Moscow, Idaho 83843\\Email: \href{mailto:jzook@vandals.uidaho.edu}{\nolinkurl{jzook@vandals.uidaho.edu}}}
+}
+
+\begin{document}
+	\maketitle
+	
+	\begin{abstract}% Summarize the outline of the problems and findings
+		This paper is a survey of recent research that addresses the problem of sensor failure in autonomous vehicles. Modern mathematical and fault models are presented, and their strengths and weaknesses are assessed. In particular, we consider the different faults that should be assumed, as well as any real-time constraints that are imposed in the environment. This initial draft of our semester project includes highlights from information we have found so far and provides a roadmap for what direction we intend to go with our research.
+			
+		include summary of direction here
+	\end{abstract}
+
+% ``an introduction giving background information, referencing common papers that build the foundation of the research area in general''
+\section{Introduction and Background}\label{sec:introduction}
+Autonomous vehicles rely on multi-sensor data fusion to gain perception of its surroundings. Data fusion is an algorithmic process that merges information from multiple sensors to determine how the vehicle will operate in its environmental context (e.g. to determine its coordinates or to move to another location) \cite{Bader2014}.
+
+In \cref{sec:ftmodel-autonomous} we talk about one thing.  \Cref{sec:adhoc-agreement} then discusses something tangentially related.  Then in \cref{sec:sensornet-agreement} we talked about more agreement stuff.  \Cref{sec:wireless-faultmodels} focuses on some other stuff.  Finally, \cref{sec:conclusions} contains conclusions and a summary of the analysis made in this paper.
+
+% ``a description of the highlights of what you found. reference papers and indicate what you found and how it allows you to make assertions about the topic
+% do NOT direct quote unless absolutely necessary (e.g. definitions)
+
+\section{A Fault Tolerant Model for Autonomous Vehicles}\label{sec:ftmodel-autonomous} %jz
+
+Bader et al. developed an architecture that tolerates both hardware faults (e.g. in sensors) and software faults (e.g. in the data fusion algorithms themselves) and applied it to a vehicle localization application for mobile robots by using Kalman filters. This architecture assumes that a single value fault is active at a given time and relies on duplication and comparison for error detection \cite{Bader2014}.
+
+Error detection is a vital aspect of fault tolerance. This task is often carried out by duplicating data from functionally identical components and comparing the results see if they deviated from the expected results. Many fault-detection techniques they rely on the data fusion algorithms themselves to detect and tolerate hardware errors. If no hardware errors are detected, the systems assume that proper agreement has been made. Bader argues that these methods fall short by considering only half of the picture: what if the faults stem from the data fusion process itself? The software side of the system, then, must be taken into consideration. Data fusion algorithms are difficult to design and validate. Therefore, fault detection and correction need to extend to the data fusion mechanisms themselves, which is the motivation for Bader's architecture \cite{Bader2014}.
+
+Bader's architecture breaks down the error detection into multiple components: the sensor component, the data fusion component, and the fault tolerant component. The sensor component and the data fusion component are broken up into two branches. Each branch contains, on the sensor side, two sensor blocks that require agreement, and, on the software side, a data fusion block. Output from the branches is sent to the fault tolerant component, which includes and error detection module and an error identification and recovery model. The error detection module takes as input all the combined data processed in the branches and, in this implementation, applies a Kalman filter data fusion algorithm to detect errors. This algorithm estimates the expected state of the system, and iteratively corrects itself by comparing its prediction to the output received from the sensors. If an error is detected, the error information and the sensor data is coalesced in the error identification and recovery module which applies the appropriate correction estimated for the error \cite{Bader2014}.
+
+One potential weakness of this system is that, in its current design, the restraints of the system allow it to react to only a single value fault at a time: either a hardware fault or a software fault. The implementation of the architecture was able to handle either fault, the limitation does not scale well, which is a concern considering that larger, survivable systems need to tolerate multiple faults across hardware and software. Bader addresses this shortcoming and suggests that an additional data fusion block, and the addition of a voting method, could better identify erroneous data fusion \cite{Bader2014}.
+
+Another concern highlighted by the implementation of the architecture was that the detection delay for software faults was an order of magnitude higher than for the hardware faults: GPS and steering angle faults were detection in a matter of seconds whereas the software fault took more than a minute. Since autonomous vehicles operate in real-time, this delay could lead to system failure (e.g. if an AV were on railroad tracks and a train was coming and it was unable to recover from its software disagreement in time). This is not necessarily a flaw with Bader's system, but a way to highlight the importance for considering software faults in models and developing faster means tolerate them \cite{Bader2014}.	
+	
+\section{Ad-Hoc Agreement}\label{sec:adhoc-agreement}
+Unmanned vehicles have a much higher sensor count then manned vehicles. These sensors include proximity sensors, RADAR, LIDAR, and GPS. These sensors are deployed in networks that have to agree on input values so they can be process accurately. In order for these sensors to agree they need to be implemented redundantly. An agreement method adapted from Yansong Ren and associates can be applied to this situation. In the algorithm proposed by Yansong Ren and associates they describe a set of redundant nodes that communicate through locally before broadcasting the results. If we adapt this algorithm to a real world sensor net the, a physically local group of sensors can be treated as a redundant group. This redundant group can agree on their readings via a majority algorithm or median agreement algorithm, to remove the readings of nodes in the group that read nothing. Once the sensor nodes have an agreed value they can pass the information to the main computer or processing module via multicast so all redundant nodes and the main processing module receive the same value. Through this method the transmitting node is held accountable to the value agreed.\cite{Ren2001}
+
+Ren's paper also describes a method for removing or replacing faulting nodes. This method includes a manager that checks the value of the sent from the transmitting node to check for faulting. This method describes ``replacing" faulting nodes with new nodes. In a unmanned vehicle this method is not very practical. This idea can be adapted, however, to a module that can detect faulting modules that ``pushes" new copies of firmware to a faulting sensor in an attempt to repair it. This method fails however if a sensor is physically damaged.\cite{Ren2001}
+
+Another aspect of redundancy that should be addressed is faulting nodes due to a failure in communication. If the communication system in a unmanned vehicle is designed to be self-repairing, through redundancy, it can take some time for the module to notice the failing path. In this case there needs to be a method for reintegrating sensors once communication is reestablished. A paper written by K.-Q. Yan and S.-C. Wang describes an agreement algorithm that involves nodes that are entering and exiting communication channels \cite{Yan2007}. We believe this algorithm can be adapted to the scenario that involves a sensor node losing contact with the rest of its redundancy group. In the algorithm described in \cite{Yan2007} one could implement a method for reestablishing contact with a sensor node even while in the middle of voting. During normal operation under this algorithm, all nodes that start a round of voting, nodes collect data and pass all there data to all other nodes in the group. All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session" all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session". If a node reconnects before the second voting algorithm all other nodes all pass the results of the second exchange to the new node(s). Once all data is transmitted the second ``session" of voting occurs and at this point all values should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
+
+\section{Sensor Network Agreement}\label{sec:sensornet-agreement}
+It is common for there to be sensor networks inside of an unmanned vehicle. These senors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range crash to byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value fusion and decision fusion algorithms in \cite{clouqueur2004}. 
+
+Sensor networks can be deployed in two different fashions, centralized and decentralized. In a centralized sensor network all nodes report there findings to a central processing unit, this is known as value fusion. In a decentralized sensor network all nodes agree on a value using an agreement algorithm and then report there findings, defined as decision fusion. In the sensor network described in the paper all sensors report their values using analog signals. This reduces the communication overhead that is normally required by digital signals. Because of the nature of the signal noise can be introduced into the system creating the necessity of agreement. For value fusions the algorithm is described as such:
+\begin{enumerate}
+	\item obtain energy from every node
+	\item drop largest \textit{n} and smallest \textit{n} values
+	\item compute average of remaining values
+	\item compare average to threshold for final decision
+\end{enumerate}
+In \cite{clouqueur2004} the algorithm for decision fusion is as such:
+\begin{enumerate}
+	\item obtain local decision from every node
+	\item drop largest \textit{n} and smallest \textit{n} decisions
+	\item compute average of remaining local decisions
+	\item compare average to threshold for final decision
+\end{enumerate}
+If all nodes report the same value for step one of each algorithm then step two can be skipped to save time \cite{clouqueur2004}.
+
+These algorithms are evaluated in terms of accuracy and precision. Accuracy is described as the distance between the agreed value and th real world condition. Precision is described as the distance between all values agreed upon. So far these algorithms show hi precision. To compare the two algorithms presented above, decision fusion has a much smaller communication overhead cost due to the reduced information being distributed due to pre-agreement amongst local sensor nodes. There are other aspects to agreement algorithms that need to be evaluated. 
+
+For value fusion, the first of these is known as the probability density function (PDF). PDF is described in the paper as the amount of noise energy that is assumed in the network. The equation for PDF is defined as
+\begin{equation}
+f_x(x)=\frac{1}{\sqrt{2\pi x}}\exp[-\frac{x}{2}]I_{(0,\infty)}(x) 
+\end{equation}
+\cite{clouqueur2004}. The next aspect is known as the false alarm probability. This is described as the probability that the agreed upon value is higher than the threshold in the absence of a target. The equation for the false alarm probability is given as:
+\begin{equation}
+P_{fa}=P[\frac{1}{N}\sum_{i=1}^{N}N_i>n_v]
+\end{equation}
+where $N$ is the number of values measured by the sensors and $n$ is the threshold \cite{clouqueur2004}.
+The final aspect used to determine the efficiency of the sensor net is the detection probability. The detection probability is defined as the probability that a sensor network will detect an entity or change in environment when there truly is one. This is given as:
+\begin{equation}
+P_d(u)=1-F_{x^2_N}(N_{n_{v}}-\sum_{i=1}^{N}E_i(u))
+\end{equation}
+where u is defined as the relative position of a target \cite{clouqueur2004}.
+
+Faults and errors can be prevented in this scheme by removing the max and min values during each voting session. If a target is truly there then more than one sensor will see it making the value persist beyond the removed extremes.
+
+\section{Wireless Network Fault Models}\label{sec:wireless-faultmodels}
+
+% ultimately boil turquoise down into a single long paragraph, placing
+% traditional fault model criticisms elsewhere
+
+Moniz, et al. developed ``Turqouis'', an asynchronous protocol specifically to reach Byzantine consensus in wireless ad hoc networks. Turquois was developed because the authors found that traditional fault models did not match up well with the pervasive communication failures common to wireless ad hoc networks (e.g. ad hoc networks created and utilized by semi-autonomous vehicles in transit). Traditional models, such as the Lamport model, assumed general reliability among the \textit{links} of the different nodes in a system. That applies well enough to standard wired networks, however, the nature of wireless communication and the dynamic properties of mobile ad hoc networks, give rise to unreliable connections due to, for example, interference, malicious jamming, and node mobility. Thus, it is necessary to develop expanded models that will be better fit to the contingencies in newer applications. As such, Turquois assumes an ad hoc, dynamic fault model \cite{Moniz2013}.
+
+Turquois finds agreement in the presence of two faults: dynamic transmission omission faults (ones in which a message sent by $P_i$ is not received by $P_j$) and Byzantine faults (asymmetric faults such as collisions or false values sent). Its aim is to operate \textit{even with} the assumption that some messages are guaranteed to be permanently corrupted or lost on a transitory basis. Turquois uses a  round-based algorithm, with messages being transmitted each round, and the presence of faults is accounted for in the assumption. Accordingly, Turquois is able to tolerate dynamic message omissions and Byzantine faults and is safe despite the failure of $f < \frac{n}{3}$ nodes. Agreement is reached under this protocol when the conditions of Validity, Agreement, and Termination are met [define validity agreement and termination] \cite{Moniz2013}.
+
+Wireless ad hoc networks are inherently resource-constrained, especially when compared with static systems. As such, computational expense is something implementers need to pay special attention to. To address this with the Turquois protocol, the authors eschewed the use of RSA-based public-key cryptography, which is computationally expensive. Instead, they used hash-based message authentication and claimed to achieve one entire magnitude of performance improvement when scaling their simulation to have a high number of nodes and comparing it to a public-key solution. There was no mention about whether or not eliminating RSA compromised security in any way \cite{Moniz2013}.
+
+Ma and Krings \cite{Ma2008}, explore some short-comings of traditional hybrid fault models and introduce a dynamic hybrid fault model. While traditional models set the basis for managing redundancy in fault-tolerant systems, they fall short when applied to dynamic systems such as Wireless Sensor Networks (WSN), where nodes may fail at different times. WSNs, then, require analysis of real-time processing mechanics, and consideration of other contingencies unique to the constraints of their environment. Traditional hybrid fault models, such as those proposed by Azadmanesh \cite{Azadmanesh2000}, do not account for timing of faulty behavior, for example, so they neglect to consider the situation that a fault seen at $t_0$ may transform into some other type of fault at $t_1$. To address this gap and to assume a fault model for WSNs, Ma and Krings assume a dynamic fault model that includes a time-dependent failure rate and time-dependent failure modes. The fault classifications from the traditional models are then seen as \textit{qualitative} parameters which, though they no longer serve as the foundation of the model, they are used as strategies in Evolutionary Game Theory (EGT) games \cite{Ma2008}.
+
+Since the underpinnings of traditional reliability analysis is declared qualitative, an alternative fault model must be assumed. Ma and Krings suggest the addition of \textit{survivability analysis} to the traditional process which allows for consideration of time and covariant-dependent failures. To do this, survivor functions are included with agreement algorithms. Then, EGTs are used to simulate the reliability aspect of the model. In the EGT, the qualitative categories from the traditional fault models serve as the constraints to the model, and the Byzantine generals serve as the players of the game. When conducting EGTs, we hope to arrive at an Evolutionary Stable Strategy (ESS); finding the ESS leads us to a payoff: reliability \cite{Ma2008}.
+
+\section{Unorganized Thoughts}
+\subsection{Chris}
+Sensor Network Data Fault Types paper\cite{Ni2009}.  With respect to event detection, an event may appear as a fault if the reading is outside of the expected range \cite[p. 25:5]{Ni2009}.  Use common fault datasets and the sensor networks application to help determine fault detection algorithm design \cite[p. 25:7]{Ni2009}.  Prognostic and Health Management (PHM) defined as ``\textit{a system engineering discipline focusing on detection, prediction, and management of the health and status of complex engineered systems}'' \cite[p. 1]{Ma2009}.  Looking at the idea of transmissive asymmetric faults while monitoring a sensor network (the idea of sensors "lying") \cite[p. 4]{Ma2009}.  Modeling real-time fault tolerance using dynamic fault models \cite[p. 4]{Ma2009}\cite{Ma2008}.  How evolutionary game theory is used in regards to these dynamic hybrid fault models \cite[p. 6]{Ma2009} and Byzantine generals playing evolutionary games \cite[p. 11,15]{Ma2009}.  One thing to do is look at how these models line up with some of the models with some of the hybrid fault models that we've looked at in class \cite{Azadmanesh2000}.  Another thing that I'd like to look at is consensus when link failures exist \cite{Biely2011}.
+
+\section{Conclusions}\label{sec:conclusions}
+We talked about some stuff and here we are summarizing all of it.
+
+\bibliographystyle{IEEEtran}
+\bibliography{./CS548-Bibliography}
+
+\end{document}
