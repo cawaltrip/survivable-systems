@@ -89,32 +89,40 @@ Another concern highlighted by the implementation of the architecture was that t
 \section{Ad-Hoc Agreement}\label{sec:adhoc-agreement}
 Unmanned vehicles have a much higher sensor count than manned vehicles. These sensors include proximity sensors, RADAR, LIDAR, and GPS. These sensors are deployed in networks that have to agree on input values so they can be process accurately. In order for these sensors to agree they need to be implemented redundantly. An agreement method adapted from Yansong Ren and associates can be applied to this situation \cite{Ren2001}. In this algorithm they describe a set of redundant nodes that communicate through locally before broadcasting the results. If we adapt this algorithm to a real-world sensor net, then a physically local group of sensors can be treated as a redundant group. This redundant group can agree on their readings via a majority algorithm or median agreement algorithm to remove the readings of nodes in the group that read nothing. Once the sensor nodes have an agreed value they can pass the information to the main computer or processing module via multicast so all redundant nodes and the main processing module receive the same value. Through this method the transmitting node is held accountable to the value agreed \cite{Ren2001}.
 
-Ren's paper also describes a method for removing or replacing faulting nodes. This method includes a manager that checks the value of the sent from the transmitting node to check for faulting. This method describes ``replacing" faulting nodes with new nodes. In a unmanned vehicle this method is not very practical. This idea can be adapted, however, to a module that can detect faulting modules that ``pushes" new copies of firmware to a faulting sensor in an attempt to repair it. This method fails however if a sensor is physically damaged.\cite{Ren2001}
+Ren's paper also describes a method for removing or replacing faulting nodes. This method includes a manager that checks the value sent from the transmitting node to check for faults. This method describes ``replacing" faulting nodes with new nodes. In an unmanned vehicle this method is not very practical. This idea can be adapted, however, to a module that can detect faulting modules that ``pushes" new copies of firmware to a faulting sensor in an attempt to repair it. This method fails if a sensor is physically damaged.\cite{Ren2001}
 
-Another aspect of redundancy that should be addressed is faulting nodes due to a failure in communication. If the communication system in a unmanned vehicle is designed to be self-repairing, through redundancy, it can take some time for the module to notice the failing path. In this case there needs to be a method for reintegrating sensors once communication is reestablished. A paper written by K.-Q. Yan and S.-C. Wang describes an agreement algorithm that involves nodes that are entering and exiting communication channels \cite{Yan2007}. We believe this algorithm can be adapted to the scenario that involves a sensor node losing contact with the rest of its redundancy group. In the algorithm described in \cite{Yan2007} one could implement a method for reestablishing contact with a sensor node even while in the middle of voting. During normal operation under this algorithm, all nodes that start a round of voting, nodes collect data and pass all there data to all other nodes in the group. All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session" all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session". If a node reconnects before the second voting algorithm all other nodes all pass the results of the second exchange to the new node(s). Once all data is transmitted the second ``session" of voting occurs and at this point all values should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
+Another aspect of redundancy that should be addressed is faulting nodes due to a failure in communication. If the communication system in an unmanned vehicle is designed to be self-repairing through redundancy, it can take some time for the module to notice the failing path. In this case, there needs to be a method for reintegrating sensors once communication is reestablished. A paper written by Yan and Wang describes an agreement algorithm that involves nodes that are entering and exiting communication channels \cite{Yan2007}. An algorithm could be adapted to the scenario that involves a sensor node losing contact with the rest of its redundancy group. In the algorithm described in \cite{Yan2007} one could implement a method for reestablishing contact with a sensor node even while in the middle of voting. During normal operation under this algorithm a single voting rounds consists of:
+\begin{enumerate}
+	\item nodes collecting data
+	\item pass collected data to other nodes 
+	\item vote based on received data
+\end{enumerate} 
+All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session" all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session". If a node reconnects before the second voting algorithm all other nodes pass the results of the second exchange to the new node(s). Once data is transmitted the second ``session" of voting occurs and at this point all nodes should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
 
 \section{Sensor Network Agreement}\label{sec:sensornet-agreement}
-It is common for there to be sensor networks inside of an unmanned vehicle. These senors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range crash to byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value fusion and decision fusion algorithms in \cite{clouqueur2004}. 
+It is common for there to be sensor networks inside of an unmanned vehicle. These sensors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range from crash, benign, to Byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value Fusion and Decision fusion algorithms in \cite{clouqueur2004}. 
 
-Sensor networks can be deployed in two different fashions, centralized and decentralized. In a centralized sensor network all nodes report there findings to a central processing unit, this is known as value fusion. In a decentralized sensor network all nodes agree on a value using an agreement algorithm and then report there findings, defined as decision fusion. In the sensor network described in the paper all sensors report their values using analog signals. This reduces the communication overhead that is normally required by digital signals. Because of the nature of the signal noise can be introduced into the system creating the necessity of agreement. For value fusions the algorithm is described as such:
+Sensor networks can be deployed in two different fashions, centralized and decentralized. In a centralized sensor network all nodes report their findings to a central processing unit, this is known as value fusion. In a decentralized sensor network all nodes agree on a value using an agreement algorithm and then report their findings, defined as decision fusion. In the sensor network described in the paper all sensors report their values using analog signals. This reduces the communication overhead that is normally required by digital signals. Because of the nature of the signal, noise can be introduced into the system creating the necessity for agreement. For value fusions the algorithm is described as such:
 \begin{enumerate}
-	\item obtain energy from every node
+	\item obtain energy level from every node
 	\item drop largest \textit{n} and smallest \textit{n} values
 	\item compute average of remaining values
-	\item compare average to threshold for final decision
+	\item compare the average to the threshold for final decision
 \end{enumerate}
 In \cite{clouqueur2004} the algorithm for decision fusion is as such:
 \begin{enumerate}
 	\item obtain local decision from every node
 	\item drop largest \textit{n} and smallest \textit{n} decisions
-	\item compute average of remaining local decisions
-	\item compare average to threshold for final decision
+	\item compute the average of remaining local decisions
+	\item compare the average to threshold for final decision
 \end{enumerate}
-If all nodes report the same value for step one of each algorithm then step two can be skipped to save time \cite{clouqueur2004}.
+If all nodes report the same value for step one of each algorithm, then step two can be skipped to save time \cite{clouqueur2004}.
 
-These algorithms are evaluated in terms of accuracy and precision. Accuracy is described as the distance between the agreed value and th real world condition. Precision is described as the distance between all values agreed upon. So far these algorithms show hi precision. To compare the two algorithms presented above, decision fusion has a much smaller communication overhead cost due to the reduced information being distributed due to pre-agreement amongst local sensor nodes. There are other aspects to agreement algorithms that need to be evaluated. 
+These algorithms are evaluated in terms of accuracy and precision. Accuracy is described as the distance between the agreed value and the real world condition. Precision is described as the distance between all values agreed upon. So far these algorithms show high precision. To compare the two algorithms presented above, decision fusion has a much smaller communication overhead cost due to the reduced information being distributed due to pre-agreement amongst local sensor nodes. 
 
-For value fusion, the first of these is known as the probability density function (PDF). PDF is described in the paper as the amount of noise energy that is assumed in the network. The equation for PDF is defined as
+%There are other aspects to agreement algorithms that need to be evaluated.
+
+For value fusion, the first of these is known as the probability density function (PDF). The PDF is described in the paper as the amount of noise energy that is assumed in the network. The equation for the PDF is defined as:
 \begin{equation}
 f_x(x)=\frac{1}{\sqrt{2\pi x}}\exp[-\frac{x}{2}]I_{(0,\infty)}(x) 
 \end{equation}
@@ -123,7 +131,7 @@ f_x(x)=\frac{1}{\sqrt{2\pi x}}\exp[-\frac{x}{2}]I_{(0,\infty)}(x)
 P_{fa}=P[\frac{1}{N}\sum_{i=1}^{N}N_i>n_v]
 \end{equation}
 where $N$ is the number of values measured by the sensors and $n$ is the threshold \cite{clouqueur2004}.
-The final aspect used to determine the efficiency of the sensor net is the detection probability. The detection probability is defined as the probability that a sensor network will detect an entity or change in environment when there truly is one. This is given as:
+The final aspect used to determine the efficiency of the sensor net is the detection probability. The detection probability is defined as the probability that a sensor network will detect an entity or a change in environment when there truly is one. This is given as:
 \begin{equation}
 P_d(u)=1-F_{x^2_N}(N_{n_{v}}-\sum_{i=1}^{N}E_i(u))
 \end{equation}
