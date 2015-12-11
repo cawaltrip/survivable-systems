@@ -69,7 +69,7 @@
 \section{Introduction and Background}\label{sec:introduction}
 Autonomous vehicles rely on multi-sensor data fusion to gain perception of its surroundings.  Data fusion is an algorithmic process that merges information from multiple sensors to determine how the vehicle will operate in its environmental context (e.g. to determine its coordinates or to move to another location) \cite{Bader2014}.  Traditionally fault models use these data fusion algorithms to detect and tolerate various hardware failures; the data fusion algorithms however may be the cause of faults - these software faults need to be protected as well \cite{Bader2014}.  Additional issues that are inherent to unmanned vehicles is that these vehicles receive input from itself, but also from external sources.  Wireless network fault models can be used to represent these additional issues \cite{Moniz2013}.
 
-The agreement algorithms themselves are also required to be more robust due to the increase in sensor counts in autonomous vehicles versus manned vehicles \cite{Ren2001}.  We explore different consensus under various conditions, including sensor failure (\cite{Ren2001}), both centralized and decentralized sensor networks (\cite{clouqueur2004,Biely2007}) and under communication link failure (\cite{Biely2011,Milosevic2014}).
+The agreement algorithms themselves are also required to be more robust due to the increase in sensor counts in autonomous vehicles versus manned vehicles \cite{Ren2001}.  We explore different consensus under various conditions, including sensor failure (\cite{Ren2001}), both centralized and decentralized sensor networks (\cite{Clouqueur2004,Biely2007}) and under communication link failure (\cite{Biely2011,Milosevic2014}).
 
 In \cref{sec:ftmodel-autonomous} an architecture of a fault model for autonomous vehicles is explored.  \Cref{sec:adhoc-agreement} then discusses ad hoc agreement with respect to unmanned vehicles.  Then in \cref{sec:sensornet-agreement} agreement in (primarily non-distributed) sensor networks is examined with emphasis both in value fusion and decision fusion algorithms.  From there, \Cref{sec:toleratingfaults} looks at how to reach consensus while being able to tolerate corrupted communication when liveness and message safety are necessary.  \Cref{sec:wireless-faultmodels} focuses on fault models for wireless networks and specifically focuses on an asynchronous algorithm called ``Turquois'' for reaching consensus in the presence of Byzantine faults.  Finally, \cref{sec:conclusions} contains conclusions and a summary of the different analyses made in this paper.
 
@@ -92,61 +92,61 @@ Ren's paper also describes a method for removing or replacing faulting nodes. Th
 
 Another aspect of redundancy that should be addressed is faulting nodes due to a failure in communication. If the communication system in an unmanned vehicle is designed to be self-repairing through redundancy, it can take some time for the module to notice the failing path. In this case, there needs to be a method for reintegrating sensors once communication is reestablished. A paper written by Yan and Wang describes an agreement algorithm that involves nodes that are entering and exiting communication channels \cite{Yan2007}. An algorithm could be adapted to the scenario that involves a sensor node losing contact with the rest of its redundancy group. In the algorithm described in \cite{Yan2007} one could implement a method for reestablishing contact with a sensor node even while in the middle of voting. During normal operation under this algorithm a single voting rounds consists of:
 \begin{enumerate}
-	\item nodes collecting data
-	\item pass collected data to other nodes 
-	\item vote based on received data
+	\item nodes collecting data;
+	\item pass collected data to other nodes; and
+	\item vote based on received data \cite{Yan2007}.
 \end{enumerate} 
 All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session'' all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session''. If a node reconnects before the second voting algorithm all other nodes pass the results of the second exchange to the new node(s). Once data is transmitted the second ``session'' of voting occurs and at this point all nodes should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
 
 \section{Sensor Network Agreement}\label{sec:sensornet-agreement}
-It is common for there to be sensor networks inside of an unmanned vehicle. These sensors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range from crash, benign, to Byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value Fusion and Decision fusion algorithms in \cite{clouqueur2004}. 
+It is common for there to be sensor networks inside of an unmanned vehicle. These sensors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range from crash, benign, to Byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value Fusion and Decision fusion algorithms in \cite{Clouqueur2004}. 
 
 Sensor networks can be deployed in two different fashions, centralized and decentralized. In a centralized sensor network all nodes report their findings to a central processing unit, this is known as value fusion. In a decentralized sensor network all nodes agree on a value using an agreement algorithm and then report their findings, defined as decision fusion. In the sensor network described in the paper all sensors report their values using analog signals. This reduces the communication overhead that is normally required by digital signals. Because of the nature of the signal, noise can be introduced into the system creating the necessity for agreement. For value fusions the algorithm is described as such:
 \begin{enumerate}
-	\item obtain energy level from every node
-	\item drop largest \textit{n} and smallest \textit{n} values
-	\item compute average of remaining values
-	\item compare the average to the threshold for final decision
+	\item obtain energy level from every node;
+	\item drop largest \textit{n} and smallest \textit{n} values;
+	\item compute average of remaining values;
+	\item compare the average to the threshold for final decision \cite{Clouqueur2004}.
 \end{enumerate}
-In \cite{clouqueur2004} the algorithm for decision fusion is as such:
+In \cite{Clouqueur2004} the algorithm for decision fusion is as such:
 \begin{enumerate}
-	\item obtain local decision from every node
-	\item drop largest \textit{n} and smallest \textit{n} decisions
-	\item compute the average of remaining local decisions
-	\item compare the average to threshold for final decision
+	\item obtain local decision from every node;
+	\item drop largest \textit{n} and smallest \textit{n} decisions;
+	\item compute the average of remaining local decisions;
+	\item compare the average to threshold for final decision \cite{Clouqueur2004}.
 \end{enumerate}
-If all nodes report the same value for step one of each algorithm, then step two can be skipped to save time \cite{clouqueur2004}.
+If all nodes report the same value for step one of each algorithm, then step two can be skipped to save time \cite{Clouqueur2004}.
 
-These algorithms are evaluated in terms of accuracy and precision. Accuracy is described as the distance between the agreed value and the real world condition. Precision is described as the distance between all values agreed upon. So far these algorithms show high precision. To compare the two algorithms presented above, decision fusion has a much smaller communication overhead cost due to the reduced information being distributed due to pre-agreement amongst local sensor nodes. 
+These algorithms are evaluated in terms of accuracy and precision. Accuracy is described as the distance between the agreed value and the real world condition. Precision is described as the distance between all values agreed upon. So far these algorithms show high precision. To compare the two algorithms presented above, decision fusion has a much smaller communication overhead cost due to the reduced information being distributed due to pre-agreement amongst local sensor nodes.
 
 %There are other aspects to agreement algorithms that need to be evaluated.
 
 For value fusion, the first of these is known as the probability density function (PDF). The PDF is described in the paper as the amount of noise energy that is assumed in the network. The equation for the PDF of an agreement is defined as:
 \begin{equation}
-f_x(x)=\frac{1}{\sqrt{2\pi x}}\exp[-\frac{x}{2}]I_{(0,\infty)}(x) 
+f_x(x)=\frac{1}{\sqrt{2\pi x}}\exp[-\frac{x}{2}]I_{(0,\infty)}(x)%
 \end{equation}
-\cite{clouqueur2004}. The next aspect is known as the false alarm probability. This is described as the probability that the agreed upon value is higher than the threshold in the absence of a target. The equation for the false alarm probability is given as:
+\cite{Clouqueur2004}. The next aspect is known as the false alarm probability. This is described as the probability that the agreed upon value is higher than the threshold in the absence of a target. The equation for the false alarm probability is given as:
 \begin{equation}
-P_{fa}=P[\frac{1}{N}\sum_{i=1}^{N}N_i>n_v]
+P_{fa}=P[\frac{1}{N}\sum_{i=1}^{N}N_i>n_v]%
 \end{equation}
-where $N$ is the number of values measured by the sensors and $n$ is the threshold \cite{clouqueur2004}.
+where $N$ is the number of values measured by the sensors and $n$ is the threshold \cite{Clouqueur2004}.
 The final aspect used to determine the efficiency of the sensor net is the detection probability. The detection probability is defined as the probability that a sensor network will detect an entity or a change in environment when there truly is one. This is given as:
 \begin{equation}
-P_d(u)=1-F_{x^2_N}(N_{n_{v}}-\sum_{i=1}^{N}E_i(u))
+P_d(u)=1-F_{x^2_N}(N_{n_{v}}-\sum_{i=1}^{N}E_i(u))%
 \end{equation}
-where $u$ is defined as the relative position of a target \cite{clouqueur2004}.
+where $u$ is defined as the relative position of a target \cite{Clouqueur2004}.
 
 Decision fusion also has these probabilities however they are defined in a slightly different manner.
 The PDF function, however, is the same as with value fusion. The false alarm probability and detection probability are defined as:
 \begin{equation}
-P_{fa}=\sum_{i=\alpha N}^{N}\binom{N}{i}F_x(\eta d)^{N-i}(1-F_x(\eta d))^i
+P_{fa}=\sum_{i=\alpha N}^{N}\binom{N}{i}F_x(\eta d)^{N-i}(1-F_x(\eta d))^i%
 \end{equation} 
 \begin{equation}
 \begin{split}
-P_d=\sum_{i=[\alpha N]}^{N}\sum_{h \in C_{i,N}}^{}[\prod_{j=1}^{i}(1-F_x(\eta d - E_{h(j)}(u)))\\\prod_{j=i+1}^{N} F_X(\eta_d-E_{h(j)}(u)]
+P_d=\sum_{i=[\alpha N]}^{N}\sum_{h \in C_{i,N}}^{}[\prod_{j=1}^{i}(1-F_x(\eta d - E_{h(j)}(u)))\\\prod_{j=i+1}^{N} F_X(\eta_d-E_{h(j)}(u)]%
 \end{split}
 \end{equation}
-respectively \cite{clouqueur2004}.
+respectively \cite{Clouqueur2004}.
 
 Faults and errors can be prevented in this scheme by removing the max and min values during each voting session. If a target is truly there then more than one sensor will see it making the value persist beyond the removed extremes.
 
