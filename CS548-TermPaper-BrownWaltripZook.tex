@@ -1,3 +1,4 @@
+
 \documentclass[twoside, conference]{IEEEtran} 
 
 % % % % % % % % % % % % % % %
@@ -97,7 +98,7 @@ Another aspect of redundancy that should be addressed is faulting nodes due to a
 	\item pass collected data to other nodes 
 	\item vote based on received data
 \end{enumerate} 
-All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session" all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session". If a node reconnects before the second voting algorithm all other nodes pass the results of the second exchange to the new node(s). Once data is transmitted the second ``session" of voting occurs and at this point all nodes should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
+All nodes in the group then exchange their values and then vote internally on the values. The nodes then pass exchange the results of there voting and vote once more. After the second voting ``session'' all nodes should be agreeing on the same value. According to the algorithm, if a node loses contact it is no longer included in voting for that round unless it reconnects before the end of the second voting ``session''. If a node reconnects before the second voting algorithm all other nodes pass the results of the second exchange to the new node(s). Once data is transmitted the second ``session'' of voting occurs and at this point all nodes should have the same value \cite{Yan2007}. This algorithm should work for nodes that temporarily lose contact to the group without the group losing accuracy.
 
 \section{Sensor Network Agreement}\label{sec:sensornet-agreement}
 It is common for there to be sensor networks inside of an unmanned vehicle. These sensors need a method for agreeing on values. There are many different faults that can present in such a sensor network due to harsh environments that the vehicle is operating in. These faults range from crash, benign, to Byzantine faults. Clouqueurm, Saluja and Ramanathan describe the precision and accuracy of both value Fusion and Decision fusion algorithms in \cite{clouqueur2004}. 
