@@ -1,6 +1,4 @@
-
-\documentclass[twoside, conference]{IEEEtran} 
-
+\documentclass[twoside, conference]{IEEEtran}%
 % % % % % % % % % % % % % % %
 % Packages Below            %
 % % % % % % % % % % % % % % %
@@ -10,8 +8,6 @@
 \usepackage{hyperref}
 \usepackage[nameinlink]{cleveref}
 \usepackage{comment}
-
-
 % % % % % % % % % % % % % % %
 % Metadata                  %
 % % % % % % % % % % % % % % %
@@ -27,8 +23,7 @@
 	citecolor=Bittersweet,  % Default is green
 	filecolor=Cyan,         % Default is cyan
 	urlcolor=Magenta,       % Default is magenta
-}
-
+}%
 % % % % % % % % % % % % % % %
 % New square root style     %
 % % % % % % % % % % % % % % %
@@ -39,9 +34,7 @@
 	\setbox0=\hbox{$#1\oldsqrt{#2\,}$}\dimen0=\ht0
 	\advance\dimen0-0.2\ht0
 	\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
-	{\box0\lower0.4pt\box2}}
-
-
+	{\box0\lower0.4pt\box2}}%
 % % % % % % % % % % % % % % %
 % Title/Author Information  %
 % % % % % % % % % % % % % % %
@@ -55,8 +48,7 @@
 	\and
 	\IEEEauthorblockN{Jared Zook}
 	\IEEEauthorblockA{Department of Computer Science\\University of Idaho\\Moscow, Idaho 83843\\Email: \href{mailto:jzook@vandals.uidaho.edu}{\nolinkurl{jzook@vandals.uidaho.edu}}}
-}
-
+}%
 \begin{document}
 	\maketitle
 	
@@ -67,7 +59,7 @@
 	\end{abstract}
 
 \section{Introduction and Background}\label{sec:introduction}
-Autonomous vehicles rely on multi-sensor data fusion to gain perception of its surroundings.  Data fusion is an algorithmic process that merges information from multiple sensors to determine how the vehicle will operate in its environmental context (e.g. to determine its coordinates or to move to another location) \cite{Bader2014}.  Traditionally fault models use these data fusion algorithms to detect and tolerate various hardware failures; the data fusion algorithms however may be the cause of faults - these software faults need to be protected as well \cite{Bader2014}.  Additional issues that are inherent to unmanned vehicles is that these vehicles receive input from itself, but also from external sources.  Wireless network fault models can be used to represent these additional issues \cite{Moniz2013}.
+Autonomous vehicles rely on multi-sensor data fusion to gain perception of its surroundings.  Data fusion is an algorithmic process that merges information from multiple sensors to determine how the vehicle will operate in its environmental context (e.g. to determine its coordinates or to move to another location) \cite{Bader2014}.  Traditionally fault models use these data fusion algorithms to detect and tolerate various hardware failures; the data fusion algorithms however may be the cause of faults - these software faults need to be protected as well \cite{Bader2014}.  As such, we find that traditional fault models shouldn't blindly be applied in this domain.  Additional issues that are inherent to unmanned vehicles is that these vehicles receive input from itself, but also from external sources.  Wireless network fault models can be used to represent these additional issues \cite{Moniz2013}.
 
 The agreement algorithms themselves are also required to be more robust due to the increase in sensor counts in autonomous vehicles versus manned vehicles \cite{Ren2001}.  We explore different consensus under various conditions, including sensor failure (\cite{Ren2001}), both centralized and decentralized sensor networks (\cite{Clouqueur2004,Biely2007}) and under communication link failure (\cite{Biely2011,Milosevic2014}).
 
@@ -197,7 +189,7 @@ Ma and Krings \cite{Ma2008} explore some short-comings of traditional hybrid fau
 Since the underpinnings of traditional reliability analysis are declared qualitative, an alternative fault model must be assumed. Ma and Krings suggest the addition of \textit{survivability analysis} to the traditional process which allows for consideration of time and covariant-dependent failures. To do this, survivor functions are included with agreement algorithms. Then, EGT games are used to simulate the reliability aspect of the model. In the EGT game, the qualitative categories from the traditional fault models serve as the constraints to the model and the Byzantine generals serve as the players of the game. When conducting EGT games, the hope is to arrive at an Evolutionary Stable Strategy (ESS) which leads a payoff: reliability \cite{Ma2008}.
 
 \section{Conclusions}\label{sec:conclusions}
-We talked about some stuff and here we are summarizing all of it.
+The carte blanche implementation of traditional fault models is inappropriate in the autonomous vehicle domain.  We found that agreement algorithms that take into consideration the fragility of communication links in wireless sensor networks as well as fault models that detect and tolerate faults in data fusion algorithms are necessary \cite{Biely2007,Bader2014}.  Agreement can also be accomplished in the presence of node failures by removing or replacing known fault nodes \cite{Ren2001}.  Also in addition to agreement in regards to data fusion, we can extrapolate this to cover decision fusion as well \cite{Clouqueur2004}.  A novel approach for exploring new dynamic fault models is to play repeated, evolutionary games in a game-theoretic framework where Byzantine generals act as players with the goal of arriving at equilibrium where the payoff is reliability \cite{Ma2008}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{./CS548-Bibliography}
